@@ -48,6 +48,7 @@ export interface SliderProps extends ViewProps {
   onValueChanged?: (low: number, high: number, byUser: boolean) => void;
   onSliderTouchStart?: (low: number, high: number) => void;
   onSliderTouchEnd?: (low: number, high: number) => void;
+  value?: number;
 }
 
 const Slider: React.FC<SliderProps> = ({
@@ -69,10 +70,11 @@ const Slider: React.FC<SliderProps> = ({
   renderNotch,
   renderRail,
   renderRailSelected,
+  value,
   ...restProps
 }) => {
   const {inPropsRef, inPropsRefPrev, setLow, setHigh} = useLowHigh(
-    lowProp,
+    value ?? lowProp,
     disableRange ? max : highProp,
     min,
     max,
