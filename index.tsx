@@ -49,6 +49,7 @@ export interface SliderProps extends ViewProps {
   onSliderTouchStart?: (low: number, high: number) => void;
   onSliderTouchEnd?: (low: number, high: number) => void;
   value?: number;
+  renderStepMarker?: () => ReactNode;
 }
 
 const Slider: React.FC<SliderProps> = ({
@@ -163,6 +164,11 @@ const Slider: React.FC<SliderProps> = ({
       ? null
       : [styles.highThumbContainer, {transform: [{translateX: highThumbX}]}];
   }, [disableRange, highThumbX]);
+
+  const stepMarkerStyles = (markerIndex: number) => ({
+    position: 'absolute',
+    left: `${(markerIndex * (100 / max))}%`
+  });
 
   const railContainerStyles = useMemo(() => {
     return [styles.railsContainer, {marginHorizontal: thumbWidth / 2}];
@@ -306,6 +312,12 @@ const Slider: React.FC<SliderProps> = ({
       <View onLayout={handleContainerLayout} style={styles.controlsContainer}>
         <View style={railContainerStyles}>
           {renderRail()}
+          {
+            step > 0 && restProps?.renderStepMarker && 
+            new Array(max + 1).fill(0).map((e, i) => 
+              <View style={stepMarkerStyles(i)}>{restProps?.renderStepMarker?.()}</View>
+            )
+          }
           <Animated.View style={selectedRailStyle}>
             {renderRailSelected()}
           </Animated.View>
